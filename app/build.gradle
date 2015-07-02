@@ -1,0 +1,42 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "21.1.2"
+
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+            storePassword "Kolkata1"
+            keyAlias "mydebugkey"
+            keyPassword "Kolkata1"
+        }
+        release {
+            storeFile file("my-release-key.keystore")
+            storePassword "Kolkata1"
+            keyAlias "mykey"
+            keyPassword "Kolkata1"
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
+        }
+    }
+}
+
+
+
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile files('libs/apigee-android-2.0.10.jar')
+    compile files('libs/gcm.jar')
+    compile files('libs/commons-io-2.4.jar')
+    compile files('libs/google-http-client-android-1.18.0-rc.jar')
+    compile files('libs/json-simple-1.1.1.jar')
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.google.android.gms:play-services:7.3.0'
+}

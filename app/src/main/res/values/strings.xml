@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Bus Alert</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="GPSAlertDialogTitle">GPS Setting</string>
+    <string name="GPSAlertDialogMessage">Please turn on GPS from Settings</string>
+    <string name="settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_gps">GPSActivity</string>
+    <string name="radius_prompt">Within Distance (km)</string>
+    <string name="home">home</string>
+    <string name="title_activity_checkin">BusRoutes</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="share_driver">Share Driver App</string>
+    <string name="share_tracker">Share Tracker App</string>
+    <string name="title_activity_test">Test</string>
+    <string name="sharetracker">Track A Bus and Get Arrival Notifications at bus stops: https://www.dropbox.com/s/nr7ktm06400vf9q/Tracker.apk?dl=0</string>
+    <string name="sharedriver">Have your bus driver install this app. It allows bus driver to send arrival notifications at bus stops and helps track the bus.https://www.dropbox.com/sh/aemxkp71ui9lkht/AADO-EyzMkb-_5C7GP-ygVJQa?dl=0</string>
+</resources>

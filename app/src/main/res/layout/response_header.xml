@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#fc214e20"
+    android:id="@+id/l2">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="40dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:onClick="returnHomeFromList"
+        android:src="@drawable/home"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewHeader"
+        android:layout_gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="16dp"
+        android:fontFamily="Calibri"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/imageView2"
+        android:layout_toEndOf="@+id/imageView2"
+        android:layout_marginLeft="26dp"/>
+
+    <ImageView
+        android:id="@+id/imageViewAllMap"
+        android:layout_width="40dp"
+        android:layout_height="45dp"
+        android:onClick="createMapForAllFriends"
+        android:src="@drawable/thin_pin"
+        android:layout_gravity="center"
+        android:baselineAlignBottom="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

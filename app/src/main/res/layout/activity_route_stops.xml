@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.sujoy.deals.DealsListActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/linearLayout2"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="180dp"
+            android:layout_height="101dp"
+            android:layout_weight="0.56">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewName"
+                android:textSize="15dp"
+                android:layout_gravity="left"
+                android:layout_marginTop="2dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewAddress"
+                android:textSize="15dp"
+                android:layout_gravity="left"
+                android:layout_marginTop="2dp"
+                android:textColor="#ffff108c"
+                android:textIsSelectable="true"
+                android:inputType="textMultiLine"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subscribe"
+                android:id="@+id/checkBoxSubscribe"
+                android:checked="false"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="55dp"
+            android:id="@+id/imageMap"
+            android:src="@drawable/pin_pink"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/tvDistance2"
+            android:textStyle="italic"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center"
+            android:fontFamily="Calibri"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
