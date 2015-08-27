@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ff33ff0f">
+    >
 
     <Button
         android:layout_width="wrap_content"
@@ -10,5 +10,6 @@
         android:text="Subscribe For Selected Stops"
         android:id="@+id/buttonFooterSubscribe"
         android:layout_gravity="center_horizontal"
-        android:onClick="addUserToRouteStopGroups" />
+        android:onClick="addUserToRouteStopGroups"
+        android:background="#ff33ff0f"/>
 </LinearLayout>

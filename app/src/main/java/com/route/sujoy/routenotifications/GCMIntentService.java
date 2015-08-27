@@ -79,7 +79,7 @@ public class GCMIntentService extends GCMBaseIntentService {
    * Issues a Notification to inform the user that server has sent a message.
    */
   private static void generateNotification(Context context, String message) {
-    int icon = R.drawable.bus_small;
+    int icon = R.drawable.bus_small_clipped_rev_2;
     long when = System.currentTimeMillis();
     NotificationManager notificationManager = (NotificationManager)
         context.getSystemService(Context.NOTIFICATION_SERVICE);

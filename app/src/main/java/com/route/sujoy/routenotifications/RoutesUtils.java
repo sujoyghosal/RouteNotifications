@@ -21,7 +21,7 @@ public class
         public static boolean showStops =  true;
         private static GPSTracker gpsTracker = null;
         private static Context context = null;
-
+    public static boolean subscribeStatus = true;
     public static final String TAG = "com.route.sujoy.routenotifications";
     private static final String DISPLAY_MESSAGE_ACTION = "com.route.sujoy.routenotifications.DISPLAY_MESSAGE";
     private static final String EXTRA_MESSAGE = "message";
@@ -31,6 +31,7 @@ public class
     public static ArrayList<RouteObject> allRoutesArray = new ArrayList<>();
     public static ArrayList<Marker> markerArray = new ArrayList<>();
     public static User loggedinUser = new User();
+    public static int subscriptionsArrayIndex = 0;
 
     static void displayMessage(Context context, String message) {
         Intent intent = new Intent(DISPLAY_MESSAGE_ACTION);
@@ -46,7 +47,7 @@ public class
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setMessage(msg)
                 .setTitle(title)
-                .setIcon(R.drawable.bus_small)
+                .setIcon(R.drawable.bus_small_clipped_rev_2)
                 .setInverseBackgroundForced(true)
                 .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -183,6 +184,16 @@ public class
 
                 private String latitude;
                 private String longitude;
+
+            public boolean isSubscribed() {
+                return subscribed;
+            }
+
+            public void setSubscribed(boolean subscribed) {
+                this.subscribed = subscribed;
+            }
+
+            private boolean subscribed;
 
                 public String getRouteName() {
                     return routeName;

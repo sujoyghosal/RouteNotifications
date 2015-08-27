@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -39,15 +36,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RoutesUtils.loadDeviceLocation(context);
         RoutesUtils.showStops = true;
-        if(!registered) {
-            GCMRegistrar.checkDevice(this);
-            GCMRegistrar.checkManifest(this);
-            AppServices.loginAndRegisterForPush(this);
-            registered = true;
-        }
-        progressDialog = ProgressDialog.show(this,"Status","Getting Routes..please wait",true,true);
+        new RegisterPush().execute("");
+        progressDialog = ProgressDialog.show(this, "Status", "Getting Routes..please wait", true, true);
         if(RoutesUtils.allRoutesArray==null || RoutesUtils.allRoutesArray.isEmpty()) {
                 new GetAllRoutes().execute("");
         }
@@ -105,7 +96,7 @@ public class MainActivity extends Activity {
         urls[0] = "http://sujoyghosal-test.apigee.net/busroute/getbusesnearme?radius=15000&latitude=" +
                 RoutesUtils.getCurrentDeviceLatitude() + "&longitude=" + RoutesUtils.getCurrentDeviceLongitude();
 
-        Log.d("####","Get Buses Near Me URL=" + urls[0]);
+        Log.d("####", "Get Buses Near Me URL=" + urls[0]);
         new GetCurrentBusLocations().execute(urls);
     }
 
@@ -119,6 +110,41 @@ public class MainActivity extends Activity {
         new GetCurrentBusLocations().execute(urls);
 
     }
+    private class RegisterPush extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute(){
+
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+
+            try {
+                if(!registered) {
+                    GCMRegistrar.checkDevice(context);
+                    GCMRegistrar.checkManifest(context);
+                    AppServices.loginAndRegisterForPush(context);
+                    registered = true;
+                }
+
+            } catch (Exception e) {
+                Log.e("Error!!!!", e.toString());
+
+                return null;
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+
+
+        }
+    }
+
+
     private class GetCurrentBusLocations extends AsyncTask<String, Void, String> {
 
         @Override
@@ -197,15 +223,12 @@ public class MainActivity extends Activity {
     }
 
 
-
-
-
     public void performShare(String shareMesg){
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
 
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMesg);
+        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, shareMesg);
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
@@ -382,7 +405,7 @@ public class MainActivity extends Activity {
 
                     RoutesUtils.allRoutesArray.add(routeObject);
                 }
-                Log.d("####Spinner:", "Populating Route Names - All Stops Array Size Right Now is " + RoutesUtils.allRoutesArray.size());
+                Log.d("####", "Populating Route Names - All Stops Array Size Right Now is " + RoutesUtils.allRoutesArray.size());
                 if(RoutesUtils.allRoutesArray!=null && RoutesUtils.allRoutesArray.size()>0) {
                     for (int i = 0; i < RoutesUtils.allRoutesArray.size(); i++) {
                         if (!RoutesUtils.routeNames.contains(RoutesUtils.allRoutesArray.get(i).getRouteName()))
@@ -404,6 +427,10 @@ public class MainActivity extends Activity {
         }
         super.onResume();
     }
-
+    @Override
+    public void onBackPressed(){
+        finish();
+        super.onBackPressed();
+    }
 
 }

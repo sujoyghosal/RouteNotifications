@@ -7,11 +7,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 
 
 public class LoginActivity extends Activity {
@@ -36,6 +35,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         RoutesUtils.init();
+        RoutesUtils.loadDeviceLocation(context);
 
         etEmail = (EditText)findViewById(R.id.editTextEmail);
     }
@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
             String urls[] = new String[2];
             urls[0] = "http://sujoyghosal-test.apigee.net/busroute/getuser?email=" + etEmail.getText().toString().trim();
             new GetUserByEmail().execute(urls);
-            progressDialog = ProgressDialog.show(this,"Status","Authenticating..please wait",true,true);
+            progressDialog = ProgressDialog.show(this, "Status", "Authenticating..please wait", true, true);
     }
 
     private void displayDialog(Context ctx,String title, String msg){
@@ -53,7 +53,7 @@ public class LoginActivity extends Activity {
 
         builder.setMessage(msg)
                 .setTitle(title)
-                .setIcon(R.drawable.bus_small)
+                .setIcon(R.drawable.bus_small_clipped_rev_2)
                 .setInverseBackgroundForced(true)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -154,7 +154,7 @@ public class LoginActivity extends Activity {
             } catch (Exception e) {
                 if(conn != null)
                     try {
-                        Log.e("Error in connection is: ",conn.getResponseCode() + "," + conn.getResponseMessage());
+                        Log.e("Error in connection is: ", conn.getResponseCode() + "," + conn.getResponseMessage());
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -193,6 +193,11 @@ public class LoginActivity extends Activity {
             finish();
         }
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 }
 

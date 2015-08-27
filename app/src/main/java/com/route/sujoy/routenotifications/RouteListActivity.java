@@ -38,7 +38,8 @@ public class RouteListActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(RoutesUtils.routeStopsArray.isEmpty()){
-            RoutesUtils.displayDialog(context,"Error","Could Not Get Bus Stops List, going back to login screen.");
+//            RoutesUtils.displayDialog(context,"Error","Could Not Get Bus Stops List, going back to login screen.");
+            finish();
             startActivity(new Intent(context,LoginActivity.class));
         }
         Log.d("#$#$#$#$", "Trying Friends List with count of friends =" + RoutesUtils.routeStopsArray.size() + "");
@@ -57,7 +58,7 @@ public class RouteListActivity extends ListActivity {
         listView.setAdapter(customAdapter);
         listView.setTextFilterEnabled(true);
         customAdapter.notifyDataSetChanged();
-        RoutesUtils.subscriptionsArray.clear();
+//        RoutesUtils.subscriptionsArray.clear();
     }
     public void returnHomeFromList(View v){
         Intent mainAct=new Intent(getApplicationContext(),MainActivity.class);
@@ -345,7 +346,7 @@ public class RouteListActivity extends ListActivity {
     }
     public void addUserToRouteStopGroups(View v){
         String urls[] = new String[2];
-
+        RoutesUtils.subscriptionsArrayIndex = 0;
         try {
             for(int i=0; i<RoutesUtils.subscriptionsArray.size();i++) {
                 urls[0] = "http://sujoyghosal-test.apigee.net/busroute/addusertogroup?user=" + RoutesUtils.loggedinUser.getUserEmail()
@@ -354,6 +355,7 @@ public class RouteListActivity extends ListActivity {
                 String rName = RoutesUtils.subscriptionsArray.get(i).getRouteName().trim().replace(" ","-").toUpperCase();
                 String sName = RoutesUtils.subscriptionsArray.get(i).getStopName().trim().replace(" ","-").toUpperCase();
                 urls[0] += Uri.encode(rName + "-" + sName);
+                RoutesUtils.subscriptionsArrayIndex = i;
                 new AssisgnUserToGroup().execute(urls);
                 Thread.sleep(1000);
             }
@@ -410,6 +412,8 @@ public class RouteListActivity extends ListActivity {
     }
     public  static class AssisgnUserToGroup extends AsyncTask<String, Void, String> {
 
+
+
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
@@ -440,23 +444,16 @@ public class RouteListActivity extends ListActivity {
 
 
         protected void onPostExecute(String result){
-                if(result == null) {
-                    Log.e( "Assign group Status: ", "Failed!! ");
+                if(result == null || result.trim().equalsIgnoreCase("true")) {
+                    Log.e("Assign group Status: ", "Failed!! ");
+                    if(RoutesUtils.subscriptionsArray!=null && RoutesUtils.subscriptionsArray.size() > 0)
+                        RoutesUtils.subscriptionsArray.get(RoutesUtils.subscriptionsArrayIndex).setSubscribed(false);
                     return;
                 }
+                if(RoutesUtils.subscriptionsArray!=null && RoutesUtils.subscriptionsArray.size() > 0)
+                    RoutesUtils.subscriptionsArray.get(RoutesUtils.subscriptionsArrayIndex).setSubscribed(true);
                 Log.d("####Asssign user to  group successful. ", result);
         }
     }
-
-    public void performShare(String shareMesg){
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMesg);
-        sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(Intent.createChooser(sharingIntent, "Share via"));
-    }
-
 
 }

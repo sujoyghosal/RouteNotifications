@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +27,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 
 public class Map extends Activity {
@@ -35,16 +41,16 @@ public class Map extends Activity {
     private Context context = this;
     private static String group = "";
     private static boolean subscribeRequest = false;
-
+    private int pos = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         Bundle b = getIntent().getExtras();
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
        RoutesUtils.markerArray.clear();
         if(b!=null){
-            int pos = b.getInt("POSITION");
+            pos = b.getInt("POSITION");
             Log.d("########Got position as:", String.valueOf(pos));
             if(pos>=0){
                 map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
@@ -64,7 +70,7 @@ public class Map extends Activity {
                         .title(RoutesUtils.routeStopsArray.get(pos).getStopName())
                         .snippet(RoutesUtils.routeStopsArray.get(pos).getDistance())
                         .icon(BitmapDescriptorFactory
-                                .fromResource(RoutesUtils.showStops ? R.drawable.bus_stop : R.drawable.bus_small)));
+                                .fromResource(RoutesUtils.showStops ? R.drawable.bus_stop_clipped_rev_1 : R.drawable.bus_small_clipped_rev_2)));
  //                     .fromResource(R.drawable.generic_business_71)));
                 RoutesUtils.markerArray.add(m);
                 m.showInfoWindow();
@@ -102,8 +108,6 @@ public class Map extends Activity {
                        group = RoutesUtils.routeName.trim().toUpperCase().replace(" ", "-")
                                + "-" + marker.getTitle().trim().toUpperCase().replace(" ", "-");
                        displayDialog(context, "Action", "Do you want to subscribe to stop " + marker.getTitle() + " for notification?");
-//                       if (subscribeRequest)
-//                           RoutesUtils.displayDialog(context, "Status", "Successfully sent subscription request");
                    }
                    marker.showInfoWindow();
                    return true;
@@ -132,12 +136,12 @@ public class Map extends Activity {
                         .position(l)
                         .title(RoutesUtils.routeStopsArray.get(i).getStopName())
                         .snippet(RoutesUtils.routeStopsArray.get(i).getDistance())
-                        .icon(BitmapDescriptorFactory.fromResource(RoutesUtils.showStops ? R.drawable.bus_stop : R.drawable.bus_small)));
+                        .icon(BitmapDescriptorFactory.fromResource(RoutesUtils.showStops ? R.drawable.bus_stop_clipped_rev_1 : R.drawable.bus_small_clipped_rev_2)));
                 m.showInfoWindow();
                 po.add(l);
                 RoutesUtils.markerArray.add(m);
                 m.setVisible(true);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(), 100));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(), 70));
                 map.setBuildingsEnabled(true);
                 map.setMyLocationEnabled(true);
                 map.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
@@ -159,26 +163,40 @@ public class Map extends Activity {
                 counter++;
 //                trackBusesOnARoute(); //refresh coordinates for all markers
                 LatLng lastBus = null;
+
                 for (int i = 0; i < RoutesUtils.routeStopsArray.size(); i++) {
                     for (int j = 0; j < RoutesUtils.markerArray.size(); j++) {
                         if (RoutesUtils.routeStopsArray.get(i).getStopName().equalsIgnoreCase(RoutesUtils.markerArray.get(j).getTitle())) {
                             Log.d("####","LatLng of Current Bus Location=" + RoutesUtils.routeStopsArray.get(i).getCoordinates().getLatitude() + "'"
                                     + RoutesUtils.routeStopsArray.get(i).getCoordinates().getLongitude());
-                            lastBus = new LatLng(
-                                    Double.valueOf(RoutesUtils.routeStopsArray.get(i).getCoordinates().getLatitude()) - 0.000006*counter,
+                            lastBus = new LatLng(Double.valueOf(RoutesUtils.routeStopsArray.get(i).getCoordinates().getLatitude()) - 0.000006*counter,
                                     Double.valueOf(RoutesUtils.routeStopsArray.get(i).getCoordinates().getLongitude()) - 0.000006*counter);
-                            RoutesUtils.markerArray.get(j).setPosition(lastBus);
+//                            lastBus = new LatLng(Double.valueOf(RoutesUtils.routeStopsArray.get(i).getCoordinates().getLatitude()),
+//                                    Double.valueOf(RoutesUtils.routeStopsArray.get(i).getCoordinates().getLongitude()));
+
+                            Marker currentBus =  RoutesUtils.markerArray.get(j);
+                            if(currentBus!=null)
+                                currentBus.remove();
+                            currentBus = map.addMarker(new MarkerOptions()
+                                    .position(lastBus)
+                                    .title(RoutesUtils.routeName)
+                                    .snippet("")
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bus_small_clipped_rev_2)));
+
+                            RoutesUtils.markerArray.set(j,currentBus);
                             Double dist = RoutesUtils.getDistanceFromLatLonInKm(Double.valueOf(RoutesUtils.getCurrentDeviceLatitude()),
                                     Double.valueOf(RoutesUtils.getCurrentDeviceLongitude()),lastBus.latitude,lastBus.longitude);
                             DecimalFormat myFormatter = new DecimalFormat("###.##");
                             Log.d("####","Distance=" + myFormatter.format(dist));
-                            RoutesUtils.markerArray.get(j).setSnippet(myFormatter.format(dist));
+                            currentBus.setSnippet(myFormatter.format(dist) + "km");
+                            currentBus.showInfoWindow();
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastBus, 60));
                             Log.d("####","LastBus=" + lastBus.toString());
                         }
                     }
                 }
             if(map!=null && lastBus!=null) {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastBus, 100));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastBus, 40));
                 // Zoom in, animating the camera.
 //                map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
             }
@@ -191,7 +209,7 @@ public class Map extends Activity {
 
         builder.setMessage(msg)
                 .setTitle(title)
-                .setIcon(R.drawable.bus_stop)
+                .setIcon(R.drawable.bus_stop_clipped_rev_1)
                 .setInverseBackgroundForced(true)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -230,11 +248,11 @@ public class Map extends Activity {
 
         @Override
         protected String doInBackground(String... urls) {
-            String response = null;
+            String response = "";
 
             try {
-                Thread.sleep(1000);
-/*                URL routeurl = new URL(urls[0]);
+                Thread.sleep(10000);
+                URL routeurl = new URL(urls[0]);
                 HttpURLConnection conn = (HttpURLConnection) routeurl.openConnection();
                 conn.connect();
 
@@ -243,11 +261,10 @@ public class Map extends Activity {
                 String s = "";
                 while ((s = buffer.readLine()) != null) {
                     response += s;
-                } */
-
+                }
+            Log.d("####GetBusLocations: ", response);
             } catch (Exception e) {
                 Log.e("Error!!!!", e.toString());
-
                 return null;
             }
             return response;
@@ -264,7 +281,7 @@ public class Map extends Activity {
             Log.d("GetCurrentBusLocation:",result);
             RoutesUtils.routeStopsArray.clear();
             try {
-                JSONArray ja = new JSONArray(result);
+                JSONArray ja = new JSONArray(result.trim());
                 for(int i=0;i<ja.length();i++){
                     JSONObject jo = ja.getJSONObject(i);
                     RouteListActivity.RouteStopsObject bus = new RouteListActivity.RouteStopsObject();
@@ -278,8 +295,8 @@ public class Map extends Activity {
                         if (location != null && location.has("latitude") && location.has("longitude")) {
                             bus.setCoordinates(new RoutesUtils.Coordinates(location.getString("latitude"), location.getString("longitude"), ""));
 
-                            if (location.getString("latitude") != null && !location.getString("latitude").isEmpty()
-                                    && location.getString("longitude") != null && !location.getString("longitude").isEmpty()) {
+                            if (location.getString("latitude") != null && RoutesUtils.isDouble(location.getString("latitude"))
+                                    && location.getString("longitude") != null && RoutesUtils.isDouble(location.getString("longitude"))) {
                                 Double dist = RoutesUtils.getDistanceFromLatLonInKm(Double.valueOf(RoutesUtils.getCurrentDeviceLatitude()),
                                         Double.valueOf(RoutesUtils.getCurrentDeviceLongitude()),
                                         Double.valueOf(location.getString("latitude")),
@@ -300,14 +317,20 @@ public class Map extends Activity {
         }
     }
 
-    public void performShare(String shareMesg){
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMesg);
-        sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+    @Override
+    public void onPause(){
+        finish();
+        super.onPause();
     }
 
+    @Override
+    public void onStop(){
+        finish();
+        super.onStop();
+    }
+    @Override
+    public void onBackPressed(){
+        finish();
+        super.onBackPressed();
+    }
 }
