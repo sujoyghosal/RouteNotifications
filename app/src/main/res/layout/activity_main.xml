@@ -98,7 +98,8 @@
                 android:layout_below="@+id/buttonShowStops"
                 android:layout_alignStart="@+id/buttonShowStops"
                 android:layout_marginTop="10dp"
-                android:layout_alignEnd="@+id/spinnerRoutes"/>
+                android:layout_alignEnd="@+id/spinnerRoutes"
+                android:visibility="visible"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -113,7 +114,8 @@
                 android:layout_below="@+id/buttonTrackRoute"
                 android:layout_alignStart="@+id/buttonTrackRoute"
                 android:layout_marginTop="10dp"
-                android:layout_alignEnd="@+id/spinnerRoutes"/>
+                android:layout_alignEnd="@+id/spinnerRoutes"
+                android:visibility="invisible"/>
 
             <Button
                 android:layout_width="305dp"

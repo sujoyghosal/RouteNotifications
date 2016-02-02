@@ -79,32 +79,32 @@ public class GCMIntentService extends GCMBaseIntentService {
    * Issues a Notification to inform the user that server has sent a message.
    */
   private static void generateNotification(Context context, String message) {
-    int icon = R.drawable.bus_small_clipped_rev_2;
-    long when = System.currentTimeMillis();
-    NotificationManager notificationManager = (NotificationManager)
-        context.getSystemService(Context.NOTIFICATION_SERVICE);
-    
-    Intent notificationIntent = new Intent(context, MainActivity.class);
-    // set intent so it does not start a new activity
-    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+  int icon = R.drawable.bus_small_clipped_rev_2;
+  long when = System.currentTimeMillis();
+  NotificationManager notificationManager = (NotificationManager)
+          context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-    Notification notification = new Builder(context)
-    	.setContentText(message)
-    	.setContentTitle(context.getString(R.string.app_name))
-    	.setSmallIcon(icon)
-    	.setWhen(when)
-    	.setContentIntent(intent)
-        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-    	.build();
+  Intent notificationIntent = new Intent(context, MainActivity.class);
+  // set intent so it does not start a new activity
+  notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+  PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
 
-    notification.flags |= Notification.FLAG_AUTO_CANCEL;
+  Notification notification = new Builder(context)
+          .setContentText(message)
+          .setContentTitle(context.getString(R.string.app_name))
+          .setSmallIcon(icon)
+          .setWhen(when)
+          .setContentIntent(intent)
+          .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+          .build();
 
-    // Play default notification sound
-    notification.defaults |= Notification.DEFAULT_SOUND;
+  notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-    // Vibrate if vibrate is enabled
+  // Play default notification sound
+  notification.defaults |= Notification.DEFAULT_SOUND;
+
+  // Vibrate if vibrate is enabled
 //    notification.defaults |= Notification.DEFAULT_VIBRATE;
-    notificationManager.notify(0, notification);
-  }
+  notificationManager.notify(0, notification);
+}
 }

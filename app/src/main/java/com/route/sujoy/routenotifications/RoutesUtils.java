@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class
         RoutesUtils {
-        public static ArrayList<RouteListActivity.RouteStopsObject> routeStopsArray = new ArrayList<>();
+        public static ArrayList<RouteListActivity.RouteStopsObject> routeStopsArray = new ArrayList<RouteListActivity.RouteStopsObject>();
         public static ArrayList routeNames = new ArrayList();
         private static String currentDeviceLatitude = null;
         private static String currentDeviceLongitude = null;
@@ -26,10 +26,10 @@ public class
     private static final String DISPLAY_MESSAGE_ACTION = "com.route.sujoy.routenotifications.DISPLAY_MESSAGE";
     private static final String EXTRA_MESSAGE = "message";
     public static String deviceID = "";
-    public static ArrayList<Subscriptions> subscriptionsArray = new ArrayList<>();
+    public static ArrayList<Subscriptions> subscriptionsArray = new ArrayList<Subscriptions>();
     public static String routeName = "ROUTE1";
-    public static ArrayList<RouteObject> allRoutesArray = new ArrayList<>();
-    public static ArrayList<Marker> markerArray = new ArrayList<>();
+    public static ArrayList<RouteObject> allRoutesArray = new ArrayList<RouteObject>();
+    public static ArrayList<Marker> markerArray = new ArrayList<Marker>();
     public static User loggedinUser = new User();
     public static int subscriptionsArrayIndex = 0;
 

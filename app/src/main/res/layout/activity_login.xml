@@ -62,7 +62,8 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:visibility="gone"/>
 
                 <Button
                     android:layout_width="wrap_content"
